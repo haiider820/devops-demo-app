@@ -1,40 +1,57 @@
 pipeline {
     agent any
 
+    environment {
+        APP_NAME = "laravel-app"
+    }
+
     stages {
 
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                git branch: 'main',
-                url: 'https://github.com/haiider820/devops-demo-app.git'
+                git branch: 'main', url: 'https://github.com/haiider820/devops-demo-app.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'composer install'
-                sh 'npm install'
+                sh 'composer install --no-interaction --prefer-dist'
             }
         }
 
-        stage('Build Frontend') {
+        stage('Setup Laravel') {
             steps {
-                sh 'npm run build'
+                sh '''
+                cp -n .env.example .env || true
+                php artisan key:generate || true
+                php artisan migrate --force || true
+                '''
             }
         }
 
-        stage('Deploy via Docker') {
+        stage('Clear Cache') {
             steps {
-                sh 'docker compose down || true'
-                sh 'docker compose up -d --build'
+                sh '''
+                php artisan config:clear
+                php artisan cache:clear
+                '''
             }
         }
 
+        stage('Deploy') {
+            steps {
+                sh '''
+                echo "Deploying via Docker..."
+                docker compose down || true
+                docker compose up -d --build
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo "🚀 Deployment Successful!"
+            echo "✅ Deployment Successful!"
         }
         failure {
             echo "❌ Deployment Failed!"
