@@ -12,9 +12,13 @@ class TodoController extends Controller
      */
     public function index()
     {
-        $todos = Todo::orderByRaw("FIELD(priority, 'high', 'medium', 'low')")
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+        // SQLite doesn't support MySQL's FIELD(). Use a CASE expression instead.
+        // Priority order: high -> medium -> low
+        $todos = Todo::orderByRaw(
+            "CASE priority WHEN 'high' THEN 1 WHEN 'medium' THEN 2 ELSE 3 END"
+        )
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('todos.index', compact('todos'));
     }
 
@@ -96,4 +100,16 @@ class TodoController extends Controller
 
         return redirect()->back()->with('success', 'Todo status updated successfully.');
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $todo = Todo::findOrFail($id);
+        $todo->delete();
+
+        return redirect()->route('todos.index')->with('success', 'Todo deleted successfully.');
+    }
 }
+
