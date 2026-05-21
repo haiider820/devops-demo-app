@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         APP_NAME = "laravel-app"
+        SONAR_HOST_URL = "http://13.49.207.120:9000"
+        SONAR_TOKEN = "YOUR_SONAR_TOKEN"
     }
 
     stages {
@@ -38,11 +40,25 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                sh '''
+                sonar-scanner \
+                -Dsonar.projectKey=laravel-app \
+                -Dsonar.sources=. \
+                -Dsonar.host.url=$SONAR_HOST_URL \
+                -Dsonar.login=$SONAR_TOKEN
+                '''
+            }
+        }
+
         stage('Deploy') {
             steps {
                 sh '''
                 echo "Deploying via Docker..."
+
                 docker compose down || true
+
                 docker compose up -d --build
                 '''
             }
@@ -53,6 +69,7 @@ pipeline {
         success {
             echo "✅ Deployment Successful!"
         }
+
         failure {
             echo "❌ Deployment Failed!"
         }
