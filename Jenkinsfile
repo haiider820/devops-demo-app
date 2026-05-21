@@ -4,7 +4,7 @@ pipeline {
     environment {
         APP_NAME = "laravel-app"
         SONAR_HOST_URL = "http://13.49.207.120:9000"
-        SONAR_TOKEN = "YOUR_SONAR_TOKEN"
+        SONAR_TOKEN = "sqa_30a759bcb68a4f9e5e2f7bedbb22785030ac9dba"
     }
 
     stages {
