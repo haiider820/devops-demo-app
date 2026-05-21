@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --brand-bg: #f4f7fb;
+        --brand-surface: #ffffff;
+        --brand-border: #d8e1ec;
+        --brand-text: #0f172a;
+        --brand-accent: #0f766e;
+        --brand-accent-strong: #115e59;
+    }
+
+    body.app-shell {
+        color: var(--brand-text);
+        background:
+            radial-gradient(circle at 10% 10%, #e0f2fe 0%, transparent 40%),
+            radial-gradient(circle at 90% 20%, #ccfbf1 0%, transparent 38%),
+            var(--brand-bg);
+    }
+}
+
+@layer components {
+    .auth-card {
+        background: var(--brand-surface);
+        border: 1px solid var(--brand-border);
+        box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    .app-shell .bg-white {
+        border-color: var(--brand-border);
+    }
+
+    .app-shell a.text-blue-600,
+    .app-shell a.text-indigo-600 {
+        color: var(--brand-accent);
+    }
+
+    .app-shell a.text-blue-600:hover,
+    .app-shell a.text-indigo-600:hover {
+        color: var(--brand-accent-strong);
+    }
+}

@@ -5,8 +5,7 @@
 @section('content')
 <div class="px-4 py-6 sm:px-0" x-data="todoApp()">
     <div class="flex items-center justify-between mb-8">
-        <h2 class="text-3xl font-bold text-gray-900">I have changed
-            this Todos</h2>
+        <h2 class="text-3xl font-bold text-gray-900">Your Todos</h2>
         <div class="flex items-center space-x-4">
             <div class="relative">
                 <input type="text" id="search" placeholder="Search todos..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" x-model="searchTerm" @input="filterTodos">
